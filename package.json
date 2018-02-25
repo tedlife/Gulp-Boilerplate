@@ -41,6 +41,7 @@
     "gulp-newer": "^1.4.0",
     "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
     "gulp-size": "^3.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-svg-symbols": "^3.1.0",

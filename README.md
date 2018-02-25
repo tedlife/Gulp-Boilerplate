@@ -2,7 +2,7 @@
 
 小项目 Gulp 常用配置包含:
 
-* PostCSS
+* Sass，PostCSS -> css
 * Babel，ES6 -> ES5
 * CSS，JS，HTML 和图片优化压缩
 * SVG Sprite
