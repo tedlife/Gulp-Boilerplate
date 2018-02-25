@@ -166,13 +166,16 @@ gulp.task("styles", () => {
     "bb >= 10"
   ];
 
-  const processors = [
+  const processors1 = [
     precss,
     will_change,
     color_rgba_fallback,
     vmin,
     pixrem,
-    autoprefixer(AUTOPREFIXER_BROWSERS),
+    autoprefixer(AUTOPREFIXER_BROWSERS)
+  ];
+
+  const processors2 = [
     mqpacker,
     cssnano,
     uncss.postcssPlugin({
@@ -182,14 +185,22 @@ gulp.task("styles", () => {
 
   // For best performance, don't add Sass partials to `gulp.src`
   return gulp
-    .src(`${cssDev}/main.css`)
+    .src(`${cssDev}/**/*.scss`)
     .pipe($.newer(cssTemp))
     .pipe($.sourcemaps.init())
-    .pipe($.postcss(processors))
+    .pipe(
+      $.sass({
+        precision: 10
+      }).on("error", $.sass.logError)
+    )
+    .pipe($.postcss(processors1))
+    .pipe(gulp.dest(cssTemp))
+    .pipe($.if("*.css", $.postcss(processors2)))
     .pipe($.size({ title: "styles" }))
     .pipe($.sourcemaps.write("./"))
     .pipe(gulp.dest(cssDist))
-    .pipe(gulp.dest(cssTemp));
+    .pipe(gulp.dest(cssTemp))
+    .pipe(browserSync.stream({ match: "**/*.css" }));
 });
 
 // Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
@@ -262,7 +273,7 @@ gulp.task("serve", ["sprite", "scripts", "styles"], () => {
   });
 
   gulp.watch([`${dev}/**/*.html`], reload);
-  gulp.watch([`${cssDev}/**/*.css`], ["styles", reload]);
+  gulp.watch([`${cssDev}/**/*.scss`], ["styles"]);
   gulp.watch([`${jsDev}/**/*.js`], ["scripts", reload]);
   gulp.watch([`${imgDev}/**/*`, `!${imgDev}/svg/**/*`], reload);
   gulp.watch([`${imgDev}/svg/**/*`], ["sprite", reload]);
